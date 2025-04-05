@@ -1,5 +1,6 @@
 from flask_login import UserMixin
-from . import db
+from app import db
+
 
 class User(UserMixin, db.Model):
 
@@ -28,5 +29,14 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return self.username
-    
+
+class VisitCounter(db.Model):
+    __tablename__ = 'visit_counter'
+
+    id = db.Column(db.Integer, primary_key=True)
+    count = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self):
+        return f'<VisitCounter {self.count}>'
+
 

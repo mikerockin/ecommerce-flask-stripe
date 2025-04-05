@@ -21,3 +21,4 @@ class Config(object):
     STRIPE_IS_ACTIVE = False
     if STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY:
         STRIPE_IS_ACTIVE = True
+

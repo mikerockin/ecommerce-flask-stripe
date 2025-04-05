@@ -13,9 +13,13 @@ from flask   import render_template, request, jsonify, redirect, g, url_for
 from jinja2  import TemplateNotFound
 from flask_login import login_required, logout_user, current_user, login_user
 from functools import wraps
-
+from flask import render_template
+from app.models import db, VisitCounter
 from app.models import User
 from . import db
+from flask import render_template
+from app.models import db, VisitCounter
+from werkzeug.exceptions import NotFound
 
 # App modules
 from app      import app
@@ -154,17 +158,23 @@ def product_info(path):
         return render_template( 'pages/page-404.html')
 
 # App main route + generic routing
-@app.route('/<path>')
+@app.route('/<path:path>')
 def index(path):
+    counter = VisitCounter.query.first()
+    if counter:
+        counter.count += 1
+        db.session.commit()
+    else:
+        counter = VisitCounter(count=1)
+        db.session.add(counter)
+        db.session.commit()
 
     try:
+        # Serve the file (if exists) from app/templates/pages/FILE.html
+        return render_template('pages/' + path, visit_count=counter.count)
 
-        # Serve the file (if exists) from app/templates/FILE.html
-        return render_template( 'pages/' + path )
-    
     except TemplateNotFound:
-        return render_template('pages/page-404.html'), 404
-
+        return render_template('pages/page-404.html', visit_count=counter.count), 404
 
 @app.route('/load-products/', methods=['GET', 'POST'])
 @login_required

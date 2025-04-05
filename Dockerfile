@@ -4,13 +4,14 @@ FROM python:3.9
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Used by Stripe for callback URL 
+
+# Used by Stripe for callback URL
 # for successful payment and cancelled
 ENV SERVER_ADDRESS http://localhost:5085/
 
-# Stripe Secrets 
-# ENV STRIPE_SECRET_KEY      <YOUR_STRIPE_SECRET_KEY>
-# ENV STRIPE_PUBLISHABLE_KEY <YOUR_STRIPE_PUBLISHABLE_KEY>
+# Stripe Secrets
+ENV STRIPE_SECRET_KEY=nib3iutb45t
+ENV STRIPE_PUBLISHABLE_KEY=biubiybui5c
 
 COPY requirements.txt .
 

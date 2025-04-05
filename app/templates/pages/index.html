@@ -1,5 +1,6 @@
 {% extends 'layouts/base-presentation.html' %}
 
+
 {% block title %} Presentation {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
@@ -7,7 +8,9 @@
 
 {% block body_class %} index-page {% endblock body_class %}
 
+
 {% block content %}
+    <p>Количество посещений: {{ visit_count }}</p>
 
   <header class="header-2">
     <div class="page-header section-height-75 relative" style="background-image: url('/static/assets/img/curved-images/curved.jpg')">

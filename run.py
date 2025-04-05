@@ -4,8 +4,13 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_minify import Minify
-
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+import os
 from app import app
+from datetime import datetime
+
+
 
 DEBUG  = app.config['DEBUG']
 STRIPE = app.config['STRIPE_IS_ACTIVE'] 
