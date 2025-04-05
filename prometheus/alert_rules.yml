@@ -1,0 +1,22 @@
+groups:
+  - name: InstanceDown
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} has been down for more than 1 minute."
+
+  - name: memory-alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 35
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "high RAM usage on {{ $labels.instance }}"
+          description: "Used {{ printf \"%.2f\" $value }}% RAM (threshhold: 35%)."
