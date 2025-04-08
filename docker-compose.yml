@@ -23,9 +23,9 @@ services:
     depends_on:
       - db
   appseed-app:
+    image: mikerockin1988/ecommerce-flask-stripe-appseed-app:1.0
     container_name: appseed_app
     restart: always
-    build: .
     networks:
       - db_network
       - web_network
@@ -81,7 +81,7 @@ services:
     image: prometheuscommunity/postgres-exporter
     container_name: postgres-exporter
     environment:
-      - DATA_SOURCE_NAME=postgresql://postgres:1234@db:5432/mydata
+      - DATA_SOURCE_NAME=postgresql://postgres:1234@db:5432/mydata?sslmode=disable
     ports:
       - 9187:9187
     networks:
