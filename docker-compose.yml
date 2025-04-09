@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:17.4-alpine
@@ -12,64 +14,87 @@ services:
       - web_network
     deploy:
       mode: replicated
-      replicas: 1  # БД обычно одна
+      replicas: 1
       placement:
         constraints:
-          - node.role == manager  # Размещаем на менеджере для стабильности
+          - node.labels.db == true 
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   adminer:
     image: adminer
     ports:
-      - "127.0.0.1:8080:8080"  # Оставляем привязку к localhost, если нужен доступ только с хоста
+      - "8080:8080"
     networks:
       - db_network
-    depends_on:
-      - db
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints:
-          - node.role == worker
+          - node.role == worker 
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+    depends_on:
+      - db
 
   appseed-app:
     image: mikerockin1988/ecommerce-flask-stripe-appseed-app:1.0
-    restart: always
     networks:
       - db_network
       - web_network
     environment:
-      - DATABASE_URL=postgresql://postgres:1234@db:5432/mydata
-    depends_on:
-      - db
+      - DATABASE_URL=postgresql://postgres:1234@db:5432/mydata?connect_timeout=10
     deploy:
       mode: replicated
-      replicas: 3  # Можно масштабировать приложение
+      replicas: 2  
       placement:
         constraints:
           - node.role == worker
+      restart_policy:
+        condition: any
       resources:
         limits:
           cpus: "0.5"
           memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/health"]  
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    depends_on:
+      - db
 
   nginx:
     image: nginx
-    restart: always
     ports:
       - "5085:5085"
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks:
       - web_network
-    depends_on:
-      - appseed-app
     deploy:
       mode: replicated
-      replicas: 1  # Один nginx как точка входа
+      replicas: 1
       placement:
         constraints:
           - node.role == worker
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 256M
+    depends_on:
+      - appseed-app
 
   prometheus:
     image: prom/prometheus
@@ -79,7 +104,6 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
-    restart: unless-stopped
     ports:
       - "9090:9090"
     networks:
@@ -89,13 +113,16 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.role == manager
+          - node.role == manager 
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
   node_exporter:
     image: prom/node-exporter
     command:
       - '--path.rootfs=/host'
-    restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
     ports:
@@ -103,11 +130,11 @@ services:
     networks:
       - web_network
     deploy:
-      mode: global  # Запускается на каждом узле для мониторинга хоста
+      mode: global  
       resources:
         limits:
-          cpus: "0.2"
-          memory: 128M
+          cpus: "0.1"
+          memory: 64M
 
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
@@ -118,18 +145,21 @@ services:
     networks:
       - db_network
       - web_network
-    depends_on:
-      - db
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.role == worker
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+    depends_on:
+      - db
 
   grafana:
     image: grafana/grafana-oss
-    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
@@ -142,6 +172,10 @@ services:
       placement:
         constraints:
           - node.role == worker
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 256M
 
   alertmanager:
     image: prom/alertmanager
@@ -160,11 +194,15 @@ services:
       placement:
         constraints:
           - node.role == manager
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
 
 networks:
   db_network:
     driver: overlay
-    attachable: true  # Для удобства отладки
+    attachable: true
   web_network:
     driver: overlay
     attachable: true
