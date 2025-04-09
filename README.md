@@ -107,5 +107,6 @@ Assigning a label to db: Assign the label db=true to the manager (replace <manag
 3. Bring the stack down with docker stack rm
 
        $ docker stack rm stackdemo
-<br />
 
+###### Tested on CentOS Stream 9 with Vagrant ###### 
+    https://kojihub.stream.centos.org/kojifiles/packages/CentOS-Stream-Vagrant/9/20250326.0/images/CentOS-Stream-Vagrant-9-20250326.0.x86_64.vagrant-virtualbox.box
