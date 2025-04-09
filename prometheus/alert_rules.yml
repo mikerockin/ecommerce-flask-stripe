@@ -13,10 +13,32 @@ groups:
   - name: memory-alerts
     rules:
       - alert: HighMemoryUsage
-        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 35
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 30
         for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "high RAM usage on {{ $labels.instance }}"
-          description: "Used {{ printf \"%.2f\" $value }}% RAM (threshhold: 35%)."
+          summary: "High RAM usage on {{ $labels.instance }}"
+          description: "Used {{ printf \"%.2f\" $value }}% RAM (threshhold: 30%)."
+
+  - name: cpu-alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 30
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 30% for the last 5 minutes on {{ $labels.instance }}"
+
+  - name: cputemp-alerts
+    rules:
+      - alert: HighCPUTemperature
+        expr: node_hwmon_temp_celsius > 30
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU temperature on {{ $labels.instance }}"
+          description: "The CPU temperature is {{ printf \"%.2f\" $value }}°C, which exceeds the threshold of 30°C."
