@@ -51,7 +51,7 @@ services:
     depends_on:
       - db
 
-  appseed-app:
+  appseed_app:
     image: mikerockin1988/ecommerce-flask-stripe-appseed-app:1.0
     networks:
       - db_network
