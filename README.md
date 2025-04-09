@@ -103,6 +103,15 @@ Assigning a label to db: Assign the label db=true to the manager (replace <manag
        6t8suvsk8wc   stackdemo_postgres_exporter    replicated   1/1        prometheuscommunity/postgres-exporter:latest            *:9187->9187/tcp
        uuw3ddc77hss   stackdemo_prometheus          replicated   1/1        prom/prometheus:latest                                  *:9090->9090/tcp
 
+Visit `http://host:5085` in your browser. The app should be up & running.
+
+Prometheus `http://host:9090`
+
+Grafana `http://host:3000`
+
+Adminer `http://host:8080`
+
+Alert manager `http://host:9093`
 
 3. Bring the stack down with docker stack rm
 
