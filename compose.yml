@@ -23,9 +23,9 @@ services:
     depends_on:
       - db
   appseed-app:
-    image: mikerockin1988/ecommerce-flask-stripe-appseed-app:1.0
     container_name: appseed_app
     restart: always
+    build: .
     networks:
       - db_network
       - web_network
