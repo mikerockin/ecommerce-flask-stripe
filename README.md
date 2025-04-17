@@ -71,6 +71,7 @@ Alert manager `http://localhost:9093`
 Make sure all three nodes in the cluster:
 
     $ docker node ls
+    
     ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
     paodf4bfton66h0p4vdvbcbjv *   manager    Ready     Active         Leader           28.0.4
     bp7zp5b0c8wc1ac9us53hs3xz     worker1    Ready     Active                          28.0.4
@@ -91,6 +92,7 @@ Assigning a label to db: Assign the label db=true to the manager (replace <manag
 2. Check that it's running with docker stack services stackdemo:
     
        $  docker stack services stackdemo
+   
        ID             NAME                          MODE         REPLICAS   IMAGE                                                   PORTS
        ay7k442h4kub   stackdemo_adminer             replicated   1/1        adminer:latest                                          *:8080->8080/tcp
        w3x0re9cqqqb   stackdemo_alertmanager        replicated   1/1        prom/alertmanager:latest                                *:9093->9093/tcp
@@ -119,3 +121,32 @@ Alert manager `http://host:9093`
 
 ###### Tested on CentOS Stream 9 with Vagrant ###### 
     https://kojihub.stream.centos.org/kojifiles/packages/CentOS-Stream-Vagrant/9/20250326.0/images/CentOS-Stream-Vagrant-9-20250326.0.x86_64.vagrant-virtualbox.box
+
+   ## Start in `Kubernetes Cluster` ##
+   Using Yandex Cloud
+   ##### *Yandex provides grants for test use of the platform
+   ### To run this, you need:
+- Locally installed kubectl 
+- Kubernetes Cluster on cloud platform with authorization on the host where kubectl is installed
+- The config files are located in k8s folder
+  
+:arrow_right: 1. Connect and Check info about cluster    
+      
+    $ kubectl cluster-info
+
+    Kubernetes control plane is running at https://51.250.45.219
+    CoreDNS is running at https://51.250.45.219/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+    
+:arrow_right: 2. Apply manifests
+
+    $ cd k8s
+    $ kubectl apply -f databases
+    $ kubectl apply -f app
+    $ kubectl apply -f nginx
+    $ kubectl apply -f monitoring
+    
+    
+   
+
