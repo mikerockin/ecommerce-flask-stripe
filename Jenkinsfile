@@ -13,7 +13,7 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    def dockerImage = docker.build("${DOCKER_HUB_REPO}:latest")
+                    def dockerImage = docker.build("${DOCKER_HUB_REPO}:beta")
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         dockerImage.push("latest")
                     }
