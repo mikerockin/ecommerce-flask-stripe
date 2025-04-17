@@ -143,9 +143,112 @@ Alert manager `http://host:9093`
 
     $ cd k8s
     $ kubectl apply -f databases
+
+    deployment.apps/adminer created
+    service/adminer created
+    statefulset.apps/postgres created
+    service/postgres created
+    
     $ kubectl apply -f app
+
+    deployment.apps/appseed-app created
+    service/appseed-app created
+
+    
     $ kubectl apply -f nginx
+
+    configmap/nginx-config created
+    deployment.apps/nginx created
+    service/nginx created
+    
     $ kubectl apply -f monitoring
+
+    configmap/alertmanager-config created
+    deployment.apps/alertmanager created
+    service/alertmanager created
+    deployment.apps/grafana created 
+    service/grafana created
+    daemonset.apps/node-exporter created
+    daemonset.apps/node-exporter unchanged
+    service/node-exporter created  
+    deployment.apps/postgres-exporter created
+    service/postgres-exporter created
+    configmap/prometheus-config created
+    deployment.apps/prometheus created
+
+:arrow_right: 3. Сheck all cluster resources.
+
+    $ kubectl get all
+
+    NAME                                    READY   STATUS    RESTARTS   AGE
+    pod/adminer-6658bd5444-64pvv            1/1     Running   0          3m16s
+    pod/adminer-6658bd5444-v9982            1/1     Running   0          3m16s
+    pod/alertmanager-645d749cf8-bc5wn       1/1     Running   0          56s
+    pod/alertmanager-645d749cf8-zntsr       1/1     Running   0          55s
+    pod/appseed-app-7f6f97679c-hfwng        1/1     Running   0          109s  
+    pod/appseed-app-7f6f97679c-m6zf2        1/1     Running   0          109s
+    pod/grafana-787d8f6bff-jh97d            1/1     Running   0          55s
+    pod/grafana-787d8f6bff-rj52d            1/1     Running   0          55s
+    pod/nginx-5d5d5c5985-8jzqv              1/1     Running   0          89s
+    pod/nginx-5d5d5c5985-wqd6r              1/1     Running   0          89s
+    pod/node-exporter-26w7f                 1/1     Running   0          55s
+    pod/node-exporter-2lntb                 1/1     Running   0          55s
+    pod/node-exporter-7s7js                 1/1     Running   0          55s
+    pod/node-exporter-kntsc                 1/1     Running   0          55s
+    pod/node-exporter-m8xfd                 1/1     Running   0          55s
+    pod/postgres-0                          1/1     Running   0          3m15s   
+    pod/postgres-exporter-f8dcbf588-6jwnw   1/1     Running   0          54s
+    pod/postgres-exporter-f8dcbf588-tpsm4   1/1     Running   0          54s
+    pod/postgres-exporter-f8dcbf588-x992l   1/1     Running   0          54s
+    pod/prometheus-54fbc4f9bf-lsttz         1/1     Running   0          54s
+
+    NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
+    service/adminer             ClusterIP      10.96.198.60    <none>            8080/TCP         3m16s
+    service/alertmanager        ClusterIP      10.96.203.89    <none>            9093/TCP         55s
+    service/appseed-app         ClusterIP      10.96.222.225   <none>            5005/TCP         109s
+    service/grafana             LoadBalancer   10.96.179.195   158.160.171.47    3000:31391/TCP   55s
+    service/kubernetes          ClusterIP      10.96.128.1     <none>            443/TCP          30m
+    service/nginx               LoadBalancer   10.96.201.215   158.160.182.200   5085:31313/TCP   88s
+    service/node-exporter       ClusterIP      10.96.223.21    <none>            9100/TCP         54s
+    service/postgres            ClusterIP      10.96.207.13    <none>            5432/TCP         3m15s
+    service/postgres-exporter   ClusterIP      10.96.132.86    <none>            9187/TCP         54s
+    service/prometheus          LoadBalancer   10.96.187.12    <pending>         9090:31909/TCP   54s
+
+    NAME                           DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+    daemonset.apps/node-exporter   5         5         5       5            5           <none>          55s
+
+    NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+    deployment.apps/adminer             2/2     2            2           3m16s
+    deployment.apps/alertmanager        2/2     2            2           56s
+    deployment.apps/appseed-app         2/2     2            2           110s
+    deployment.apps/grafana             2/2     2            2           55s
+    deployment.apps/nginx               2/2     2            2           89s
+    deployment.apps/postgres-exporter   3/3     3            3           54s
+    deployment.apps/prometheus          1/1     1            1           54s
+
+    NAME                                          DESIRED   CURRENT   READY   AGE
+    replicaset.apps/adminer-6658bd5444            2         2         2       3m16s
+    replicaset.apps/alertmanager-645d749cf8       2         2         2       56s
+    replicaset.apps/appseed-app-7f6f97679c        2         2         2       110s
+    replicaset.apps/grafana-787d8f6bff            2         2         2       55s
+    replicaset.apps/nginx-5d5d5c5985              2         2         2       89s
+    replicaset.apps/postgres-exporter-f8dcbf588   3         3         3       54s
+    replicaset.apps/prometheus-54fbc4f9bf         1         1         1       54s
+
+    NAME                        READY   AGE
+    statefulset.apps/postgres   1/1     3m16s
+    
+   available on public IP:
+   
+    app - `http://158.160.182.200:5085`
+    Grafana `http://158.160.171.47:3000`
+    
+   Not available on public IP:
+   *Quota limit by Yandex Cloud
+    Adminer `http://host:8080`
+    Alert manager `http://host:9093`
+    Prometheus `http://host:9090`
+    
     
     
    
