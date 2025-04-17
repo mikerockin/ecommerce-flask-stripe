@@ -203,7 +203,7 @@ Alert manager `http://host:9093`
     pod/prometheus-54fbc4f9bf-lsttz         1/1     Running   0          54s
 
     NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)          AGE
-    service/adminer             ClusterIP      10.96.198.60    <none>            8080/TCP         3m16s
+    service/adminer             LoadBalancer   10.96.198.60    <pending>         8080/TCP         3m16s
     service/alertmanager        ClusterIP      10.96.203.89    <none>            9093/TCP         55s
     service/appseed-app         ClusterIP      10.96.222.225   <none>            5005/TCP         109s
     service/grafana             LoadBalancer   10.96.179.195   158.160.171.47    3000:31391/TCP   55s
@@ -238,13 +238,15 @@ Alert manager `http://host:9093`
     NAME                        READY   AGE
     statefulset.apps/postgres   1/1     3m16s
     
-   available on public IP:
+   Available on public IP:
    
     app - `http://158.160.182.200:5085`
     Grafana `http://158.160.171.47:3000`
     
    Not available on public IP:
-   *Quota limit by Yandex Cloud
+   
+   *Quota limit (LoadBalancer) by Yandex Cloud
+   
     Adminer `http://host:8080`
     Alert manager `http://host:9093`
     Prometheus `http://host:9090`
