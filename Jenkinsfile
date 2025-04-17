@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/mikerockin/ecommerce-flask-stripe.git', branch: 'main'
+                git url: 'https://github.com/mikerockin/ecommerce-flask-stripe.git', branch: 'master'
             }
         }
         stage('Build and Push Docker Image') {
