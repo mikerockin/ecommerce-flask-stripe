@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_REPO = "mikerockin1988"
-/ecommerce-flask-stripe" 
+        DOCKER_HUB_REPO = "mikerockin1988"/ecommerce-flask-stripe" 
         DOCKER_CREDENTIALS_ID = "dockerhub-credentials"
     }
     stages {
