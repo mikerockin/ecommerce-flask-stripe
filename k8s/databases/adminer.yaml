@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: adminer
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: adminer
   ports:
