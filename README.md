@@ -4,7 +4,7 @@
 
   *A database (PostgreSQL) has been added that records the amount of visits to the product presentation page.
   
-  *Adminer has been added for database administration.
+  *Adminer has been added for database administration .
   
   *Added node and database connection monitoring (Prometheus + Grafana)
   
