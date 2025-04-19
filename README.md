@@ -1,4 +1,4 @@
-# ` Flask Mini eCommerce Education App`
+# ` Flask Mini eCommerce  App`
 
 - [Flask mini eCommerce](https://github.com/app-generator/ecommerce-flask-stripe) sources (this repo)
 
